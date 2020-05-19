@@ -29,10 +29,10 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compile 'javax.validation:validation-api'
 	implementation 'org.hibernate.validator:hibernate-validator'
-	implementation 'com.h2database:h2'
+	compile group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2'
+
 }
 
 test {

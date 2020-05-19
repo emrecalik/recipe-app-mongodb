@@ -6,7 +6,6 @@ import com.edoras.recipeproject.repositories.RecipeRepository;
 import com.edoras.recipeproject.repositories.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,6 @@ import java.util.Set;
 
 @Component
 @Slf4j
-@Profile("default")
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private final UnitOfMeasureRepository unitOfMeasureRepository;
     private final RecipeRepository recipeRepository;

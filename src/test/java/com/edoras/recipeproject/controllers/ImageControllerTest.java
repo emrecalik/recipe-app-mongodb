@@ -29,7 +29,7 @@ class ImageControllerTest {
 
     ImageController imageController;
 
-    private Long RECIPE_ID = 1L;
+    private String RECIPE_ID = "1";
 
     MockMvc mockMvc;
 
@@ -49,7 +49,7 @@ class ImageControllerTest {
         recipe.setId(RECIPE_ID);
 
         // when
-        when(recipeService.findById(anyLong())).thenReturn(recipe);
+        when(recipeService.findById(anyString())).thenReturn(recipe);
 
         // then
         mockMvc.perform(get("/recipe/" + RECIPE_ID + "/image"))

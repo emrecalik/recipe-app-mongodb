@@ -84,8 +84,7 @@ public class IngredientServiceImpl implements IngredientService {
             } else {
                 //add new Ingredient
                 Ingredient ingredient = ingredientCommandConverter.convert(command);
-                ingredient.setRecipe(recipe);
-                recipe.addIngredients(ingredient);
+                recipe.addIngredient(ingredient);
             }
 
             Recipe savedRecipe = recipeRepository.save(recipe);
@@ -127,7 +126,6 @@ public class IngredientServiceImpl implements IngredientService {
         }
 
         Ingredient ingredientToDelete = ingredientOptional.get();
-        ingredientToDelete.setRecipe(null);
 
         recipe.getIngredients().remove(ingredientToDelete);
 

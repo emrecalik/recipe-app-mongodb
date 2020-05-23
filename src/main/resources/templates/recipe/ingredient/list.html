@@ -41,7 +41,7 @@
                                 <tbody>
                                     <tr th:each="ingredient : ${recipe.ingredients}" style="font-size: 12px">
                                         <th scope="row" th:text="${ingredient.getId()}"></th>
-                                        <th scope="row" th:text="${ingredient.getAmount()} + ' ' + ${ingredient.getUnitOfMeasure().getUom()} + ' ' + ${ingredient.getDescription()}"></th>
+                                        <th scope="row" th:text="${ingredient.getAmount()} + ' ' + ${ingredient.getUnitOfMeasure().getDescription()} + ' ' + ${ingredient.getDescription()}"></th>
                                         <th scope="row"><a th:href="'/recipe/' + ${recipe.getId()} + '/ingredients/' + ${ingredient.getId()} + '/show'">View</a></th>
                                         <th scope="row"><a th:href="'/recipe/' + ${recipe.getId()} + '/ingredients/' + ${ingredient.getId()} + '/update'">Update</a></th>
                                         <th scope="row"><a th:href="'/recipe/' + ${recipe.getId()} + '/ingredients/' + ${ingredient.getId()} + '/delete'">Delete</a></th>

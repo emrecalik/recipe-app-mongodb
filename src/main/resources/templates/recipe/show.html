@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <tr th:each="item : ${recipe.getCategories()}">
-                                        <li><td th:text="${item.getCategoryName()}"></td></li>
+                                        <li><td th:text="${item.getDescription()}"></td></li>
                                     </tr>
                                 </div>
                                 <div class="col-md-6">
@@ -72,7 +72,7 @@
                                     <h5>Servings:</h5>
                                 </div>
                                 <div class="col-md-3">
-                                    <p th:text="${recipe.getServing()}"></p>
+                                    <p th:text="${recipe.getServings()}"></p>
                                 </div>
                             </div>
                             <div class="row">
@@ -103,7 +103,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <ul th:each="item : ${recipe.getIngredients()}">
-                                        <li><td th:text="${item.getAmount() + ' ' + item.getUnitOfMeasure().getUom() + ' - ' + item.getDescription()}"></td></li>
+                                        <li><td th:text="${item.getAmount() + ' ' + item.getUnitOfMeasure().getDescription() + ' - ' + item.getDescription()}"></td></li>
                                     </ul>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <p th:text="${recipe.getNotes().notes}"></p>
+                                    <p th:text="${recipe.getNotes().recipeNotes}"></p>
                                 </div>
                             </div>
                         </div>

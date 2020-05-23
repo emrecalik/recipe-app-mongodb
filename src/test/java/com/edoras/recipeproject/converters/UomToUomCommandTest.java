@@ -11,7 +11,7 @@ class UomToUomCommandTest {
 
     UomToUomCommand uomConverter;
 
-    private final Long UOM_ID = 1L;
+    private final String UOM_ID = "1";
     private final String UOM_UOM = "uom";
 
     @BeforeEach

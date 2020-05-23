@@ -9,12 +9,13 @@ import com.edoras.recipeproject.converters.UomToUomCommand;
 import com.edoras.recipeproject.domains.Ingredient;
 import com.edoras.recipeproject.domains.Recipe;
 import com.edoras.recipeproject.domains.UnitOfMeasure;
-import com.edoras.recipeproject.repositories.RecipeRepository;
-import com.edoras.recipeproject.repositories.UnitOfMeasureRepository;
+import com.edoras.recipeproject.repositories.reactive.RecipeReactiveRepository;
+import com.edoras.recipeproject.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,10 +31,10 @@ class IngredientServiceImplTest {
     IngredientServiceImpl ingredientService;
 
     @Mock
-    RecipeRepository recipeRepository;
+    RecipeReactiveRepository recipeReactiveRepository;
 
     @Mock
-    UnitOfMeasureRepository uomRepository;
+    UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
     private final String RECIPE_ID = "1";
     private final String INGREDIENT_ID = "2";
@@ -46,7 +47,8 @@ class IngredientServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        ingredientService = new IngredientServiceImpl(ingredientConverter, recipeRepository, uomRepository, ingredientCommandConverter);
+        ingredientService = new IngredientServiceImpl(ingredientConverter,
+                recipeReactiveRepository, unitOfMeasureReactiveRepository, ingredientCommandConverter);
     }
 
     @Test
@@ -68,14 +70,14 @@ class IngredientServiceImplTest {
         recipe.addIngredient(ingredient2);
         recipe.addIngredient(ingredient3);
 
-        when(recipeRepository.findById(anyString())).thenReturn(java.util.Optional.of(recipe));
+        when(recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(recipe));
 
         // when
         IngredientCommand ingredientCommand = ingredientService.findCommandByRecipeIdAndIngredientId("1", "2").block();
 
         // then
         assertEquals("2", ingredientCommand.getId());
-        verify(recipeRepository, times(1)).findById(anyString());
+        verify(recipeReactiveRepository, times(1)).findById(anyString());
     }
 
     @Test
@@ -97,17 +99,17 @@ class IngredientServiceImplTest {
         ingredientSet.add(ingredient);
         recipe.setIngredients(ingredientSet);
 
-        when(recipeRepository.findById(anyString())).thenReturn(java.util.Optional.of(recipe));
-        when(recipeRepository.save(any())).thenReturn(recipe);
-        when(uomRepository.findById(anyString())).thenReturn(java.util.Optional.of(new UnitOfMeasure()));
+        when(recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(recipe));
+        when(recipeReactiveRepository.save(any())).thenReturn(Mono.just(recipe));
+        when(unitOfMeasureReactiveRepository.findById(anyString())).thenReturn(Mono.just(new UnitOfMeasure()));
 
         // when
         ingredientService.save(ingredientCommand);
 
         // then
         assertEquals("3", ingredientCommand.getId());
-        verify(recipeRepository, times(1)).findById(anyString());
-        verify(recipeRepository, times(1)).save(any());
+        verify(recipeReactiveRepository, times(1)).findById(anyString());
+        verify(recipeReactiveRepository, times(1)).save(any());
 
     }
 }

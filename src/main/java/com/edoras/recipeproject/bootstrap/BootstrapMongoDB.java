@@ -4,7 +4,11 @@ import com.edoras.recipeproject.domains.*;
 import com.edoras.recipeproject.repositories.CategoryRepository;
 import com.edoras.recipeproject.repositories.RecipeRepository;
 import com.edoras.recipeproject.repositories.UnitOfMeasureRepository;
+import com.edoras.recipeproject.repositories.reactive.CategoryReactiveRepository;
+import com.edoras.recipeproject.repositories.reactive.RecipeReactiveRepository;
+import com.edoras.recipeproject.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -28,6 +32,15 @@ public class BootstrapMongoDB implements ApplicationListener<ContextRefreshedEve
         this.recipeRepository = recipeRepository;
     }
 
+    @Autowired
+    UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
+
+    @Autowired
+    CategoryReactiveRepository categoryReactiveRepository;
+
+    @Autowired
+    RecipeReactiveRepository recipeReactiveRepository;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         if (categoryRepository.count() == 0L){
@@ -41,6 +54,11 @@ public class BootstrapMongoDB implements ApplicationListener<ContextRefreshedEve
         }
 
         recipeRepository.saveAll(getRecipes());
+
+        log.error("UOM COUNT: " + unitOfMeasureReactiveRepository.count().block().toString());
+        log.error("RECIPE COUNT: " + recipeReactiveRepository.count().block().toString());
+        log.error("CATEGORY COUNT: " + categoryReactiveRepository.count().block().toString());
+
     }
 
     private void loadCategories(){

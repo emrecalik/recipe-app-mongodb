@@ -9,8 +9,8 @@ import com.edoras.recipeproject.domains.Recipe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,7 +69,7 @@ class RecipeCommandToRecipeTest {
 
         recipeCommand.setNotesCommand(notesCommand);
 
-        Set<IngredientCommand> ingredientCommands = new HashSet<>();
+        List<IngredientCommand> ingredientCommands = new ArrayList<>();
         IngredientCommand ingredientCommand1 = new IngredientCommand();
         ingredientCommand1.setId(INGREDIENT_ID_1);
         IngredientCommand ingredientCommand2 = new IngredientCommand();
@@ -79,7 +79,7 @@ class RecipeCommandToRecipeTest {
 
         recipeCommand.setIngredientCommands(ingredientCommands);
 
-        Set<CategoryCommand> categoryCommands = new HashSet<>();
+        List<CategoryCommand> categoryCommands = new ArrayList<>();
         CategoryCommand categoryCommand1 = new CategoryCommand();
         categoryCommand1.setId(CATEGORY_ID_1);
         CategoryCommand categoryCommand2 = new CategoryCommand();

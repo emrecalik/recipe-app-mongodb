@@ -2,13 +2,13 @@ package com.edoras.recipeproject.services;
 
 import com.edoras.recipeproject.commands.RecipeCommand;
 import com.edoras.recipeproject.domains.Recipe;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface RecipeService {
-    List<Recipe> getRecipes();
-    Recipe findById(String id);
-    RecipeCommand save(RecipeCommand recipeCommand);
-    RecipeCommand findCommandById(String id);
-    void deleteById(String id);
+    Flux<Recipe> getRecipes();
+    Mono<Recipe> findById(String id);
+    Mono<RecipeCommand> save(RecipeCommand recipeCommand);
+    Mono<RecipeCommand> findCommandById(String id);
+    Mono<Void> deleteById(String id);
 }

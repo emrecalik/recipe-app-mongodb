@@ -41,6 +41,7 @@ public class IngredientServiceImpl implements IngredientService {
                 .getIngredients().stream()
                 .filter(ingredient -> ingredient.getId().equals(ingredientId))
                 .map(ingredient -> ingredientConverter.convert(ingredient)).findFirst().get();
+        ingredientCommand.setRecipeId(recipeId);
         return Mono.just(ingredientCommand);
     }
 
@@ -93,7 +94,6 @@ public class IngredientServiceImpl implements IngredientService {
                         .findFirst();
             }
 
-            //to do check for fail
             return Mono.just(ingredientConverter.convert(savedIngredient.get()));
         }
     }

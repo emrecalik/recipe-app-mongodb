@@ -29,13 +29,13 @@ class RecipeServiceIT {
     @Test
     void save() {
         // given
-        List<Recipe> recipes = recipeServiceImpl.getRecipes();
+        List<Recipe> recipes = recipeServiceImpl.getRecipes().collectList().block();
         Recipe recipe = recipes.get(0);
         recipe.setDescription(NEW_DESCRIPTION);
 
         // when
         RecipeCommand recipeCommand = recipeConverter.convert(recipe);
-        RecipeCommand savedRecipeCommand = recipeServiceImpl.save(recipeCommand);
+        RecipeCommand savedRecipeCommand = recipeServiceImpl.save(recipeCommand).block();
 
         // then
         assertEquals(NEW_DESCRIPTION, savedRecipeCommand.getDescription());

@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -42,7 +43,7 @@ class RecipeControllerTest {
     void showRecipe() throws Exception {
         Recipe recipe = new Recipe();
         recipe.setId("1");
-        when(recipeService.findById(anyString())).thenReturn(recipe);
+        when(recipeService.findById(anyString())).thenReturn(Mono.just(recipe));
 
         mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(view().name("recipe/show"))
@@ -73,9 +74,9 @@ class RecipeControllerTest {
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId("3");
 
-        when(recipeService.save(any())).thenReturn(recipeCommand);
+        when(recipeService.save(any())).thenReturn(Mono.just(recipeCommand));
 
-        RecipeCommand savedRecipeCommand = recipeService.save(recipeCommand);
+        RecipeCommand savedRecipeCommand = recipeService.save(recipeCommand).block();
 
         assertEquals("3", savedRecipeCommand.getId());
 
@@ -103,7 +104,7 @@ class RecipeControllerTest {
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setId("1");
 
-        when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
+        when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(recipeCommand));
 
         mockMvc.perform(get("/recipe/1/update"))
                 .andExpect(status().isOk())

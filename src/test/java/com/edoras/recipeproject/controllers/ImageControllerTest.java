@@ -12,6 +12,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Mono;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -49,7 +50,7 @@ class ImageControllerTest {
         recipe.setId(RECIPE_ID);
 
         // when
-        when(recipeService.findById(anyString())).thenReturn(recipe);
+        when(recipeService.findById(anyString())).thenReturn(Mono.just(recipe));
 
         // then
         mockMvc.perform(get("/recipe/" + RECIPE_ID + "/image"))
@@ -87,7 +88,7 @@ class ImageControllerTest {
         recipeCommand.setId(RECIPE_ID);
         recipeCommand.setImage(imageByteObjects);
 
-        when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
+        when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(recipeCommand));
 
         MockHttpServletResponse response = mockMvc.perform(get("/recipe/" + RECIPE_ID + "/recipeImage"))
                 .andExpect(status().isOk())

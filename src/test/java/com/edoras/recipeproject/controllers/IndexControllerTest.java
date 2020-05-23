@@ -11,7 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import reactor.core.publisher.Flux;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,6 +39,18 @@ class IndexControllerTest {
 
     @Test
     void MockMvcTest() throws Exception {
+        Recipe recipe1 = new Recipe();
+        recipe1.setDescription("Recipe1");
+
+        Recipe recipe2 = new Recipe();
+        recipe2.setDescription("Recipe2");
+
+        List<Recipe> recipeList = new ArrayList<>();
+        recipeList.add(recipe1);
+        recipeList.add(recipe2);
+
+        Mockito.when(recipeService.getRecipes()).thenReturn(Flux.fromIterable(recipeList));
+
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(status().isOk())
@@ -50,7 +64,7 @@ class IndexControllerTest {
         Recipe anotherRecipe = new Recipe();
         anotherRecipe.setId("2");
         recipes.add(anotherRecipe);
-        Mockito.when(recipeService.getRecipes()).thenReturn(recipes);
+        Mockito.when(recipeService.getRecipes()).thenReturn(Flux.fromIterable(recipes));
 
         String index = indexController.showHome(model);
 

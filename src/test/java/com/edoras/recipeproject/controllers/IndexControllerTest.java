@@ -48,7 +48,7 @@ class IndexControllerTest {
         List<Recipe> recipes = new LinkedList<>();
         recipes.add(new Recipe());
         Recipe anotherRecipe = new Recipe();
-        anotherRecipe.setId(2L);
+        anotherRecipe.setId("2");
         recipes.add(anotherRecipe);
         Mockito.when(recipeService.getRecipes()).thenReturn(recipes);
 

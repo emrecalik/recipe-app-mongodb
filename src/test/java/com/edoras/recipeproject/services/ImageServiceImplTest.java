@@ -11,7 +11,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 class ImageServiceImplTest {
@@ -21,7 +20,7 @@ class ImageServiceImplTest {
 
     ImageServiceImpl imageService;
 
-    private final Long RECIPE_ID = 1L;
+    private final String RECIPE_ID = "1";
 
     @BeforeEach
     void setUp() {
@@ -38,7 +37,7 @@ class ImageServiceImplTest {
         Recipe recipe = new Recipe();
         recipe.setId(RECIPE_ID);
 
-        when(recipeRepository.findById(anyLong())).thenReturn(java.util.Optional.of(recipe));
+        when(recipeRepository.findById(anyString())).thenReturn(java.util.Optional.of(recipe));
 
         // when
         imageService.saveImage(RECIPE_ID, multipartFile);

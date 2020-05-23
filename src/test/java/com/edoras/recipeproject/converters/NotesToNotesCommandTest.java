@@ -11,7 +11,7 @@ class NotesToNotesCommandTest {
 
     NotesToNotesCommand notesConverter;
 
-    private final Long NOTES_ID = 1L;
+    private final String NOTES_ID = "1";
     private final String NOTES_NOTES = "notes";
 
     @BeforeEach

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 class RecipeServiceImplTest {
@@ -42,12 +41,14 @@ class RecipeServiceImplTest {
     @Test
     void getRecipes() {
         Recipe recipe = new Recipe();
-        List<Recipe> recipes = new LinkedList<>();
-        recipes.add(recipe);
+        List<Recipe> recipesData = new LinkedList<>();
+        recipesData.add(recipe);
 
-        when(recipeRepository.findAll()).thenReturn(recipes);
+        when(recipeService.getRecipes()).thenReturn(recipesData);
 
-        assertEquals(recipeRepository.findAll().size(),1);
+        List<Recipe> recipes = recipeService.getRecipes();
+
+        assertEquals(recipes.size(),1);
 
         Mockito.verify(recipeRepository, Mockito.times(1)).findAll();
 
@@ -57,44 +58,44 @@ class RecipeServiceImplTest {
     @Test
     void findById() {
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
 
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
+        when(recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
 
-        Recipe recipeReturned = recipeService.findById(1L);
+        Recipe recipeReturned = recipeService.findById("1");
 
         assertEquals(recipe, recipeReturned);
 
-        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, times(1)).findById(anyString());
     }
 
     @Test()
     void notFoundById() {
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Assertions.assertThrows(NotFoundException.class, () -> recipeService.findById(1L));
+        when(recipeRepository.findById(anyString())).thenReturn(Optional.empty());
+        Assertions.assertThrows(NotFoundException.class, () -> recipeService.findById("1"));
     }
 
     @Test
     void findCommandById() {
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
 
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
+        when(recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
 
         RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(1L);
+        recipeCommand.setId("1");
 
         when(recipeConverter.convert(any())).thenReturn(recipeCommand);
 
-        RecipeCommand recipeCommandReturned = recipeService.findCommandById(1L);
+        RecipeCommand recipeCommandReturned = recipeService.findCommandById("1");
 
-        verify(recipeRepository, times(1)).findById(1L);
+        verify(recipeRepository, times(1)).findById("1");
         verify(recipeConverter, times(1)).convert(recipe);
     }
 
     @Test
     void deleteById() {
-        recipeService.deleteById(1L);
-        verify(recipeRepository, times(1)).deleteById(anyLong());
+        recipeService.deleteById("1");
+        verify(recipeRepository, times(1)).deleteById(anyString());
     }
 }

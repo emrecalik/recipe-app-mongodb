@@ -11,7 +11,7 @@ class CategoryToCategoryCommandTest {
 
     CategoryToCategoryCommand categoryConverter;
 
-    private final long CATEGORY_ID = 1L;
+    private final String CATEGORY_ID = "1";
     private final String CATEGORY_NAME = "Turkish";
 
     @BeforeEach

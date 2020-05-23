@@ -14,7 +14,7 @@ class RecipeToRecipeCommandTest {
 
     RecipeToRecipeCommand recipeConverter;
 
-    private final Long RECIPE_ID = 1L;
+    private final String RECIPE_ID = "1";
     private final String RECIPE_DESCRIPTION = "my recipe";
     private final int RECIPE_PREPTIME = 7;
     private final int RECIPE_COOKTIME = 5;
@@ -24,11 +24,11 @@ class RecipeToRecipeCommandTest {
     private final String RECIPE_DIRECTIONS = "directions";
     private final Difficulty RECIPE_DIFFICULTY = Difficulty.MODERATE;
 
-    private final Long NOTES_ID = 2L;
-    private final Long INGREDIENT_ID_1 = 3L;
-    private final Long INGREDIENT_ID_2 = 4L;
-    private final Long CATEGORY_ID_1 = 2L;
-    private final Long CATEGORY_ID_2 = 3L;
+    private final String NOTES_ID = "2";
+    private final String INGREDIENT_ID_1 = "3";
+    private final String INGREDIENT_ID_2 = "4";
+    private final String CATEGORY_ID_1 = "2";
+    private final String CATEGORY_ID_2 = "3";
 
     @BeforeEach
     void setUp() {

@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class UomCommandToUomTest {
 
     UomCommandToUom uomCommandConverter;
-    private final Long UOM_ID = 1L;
+    private final String UOM_ID = "1";
     private final String UOM_UOM = "uom";
 
     @BeforeEach

@@ -14,10 +14,10 @@ class IngredientCommandToIngredientTest {
 
     IngredientCommandToIngredient ingredientCommandConverter;
 
-    private final long INGREDIENT_ID = 1L;
+    private final String INGREDIENT_ID = "1";
     private final String INGREDIENT_DESCRIPTION = "ingredient description";
     private final BigDecimal INGREDIENT_AMOUNT = new BigDecimal(1);
-    private final long UOM_ID = 2L;
+    private final String UOM_ID = "2";
 
     @BeforeEach
     void setUp() {

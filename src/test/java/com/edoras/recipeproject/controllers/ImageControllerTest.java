@@ -56,7 +56,7 @@ class ImageControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/imageuploadform"))
                 .andExpect(model().attributeExists("recipe"));
-        verify(recipeService, times(1)).findById(anyLong());
+        verify(recipeService, times(1)).findById(anyString());
     }
 
     @Test
@@ -68,7 +68,7 @@ class ImageControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/" + RECIPE_ID + "/show"));
 
-        verify(imageService, times(1)).saveImage(anyLong(), any());
+        verify(imageService, times(1)).saveImage(anyString(), any());
     }
 
     @Test
@@ -87,20 +87,13 @@ class ImageControllerTest {
         recipeCommand.setId(RECIPE_ID);
         recipeCommand.setImage(imageByteObjects);
 
-        when(recipeService.findCommandById(anyLong())).thenReturn(recipeCommand);
+        when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
 
         MockHttpServletResponse response = mockMvc.perform(get("/recipe/" + RECIPE_ID + "/recipeImage"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
 
         assertEquals(response.getContentAsByteArray().length, imageBytes.length);
-    }
-
-    @Test
-    void handleNumberFormatException() throws Exception {
-        mockMvc.perform(get("/recipe/DUMMY/image"))
-                .andExpect(status().isBadRequest())
-                .andExpect(view().name("400error"));
     }
 
 }

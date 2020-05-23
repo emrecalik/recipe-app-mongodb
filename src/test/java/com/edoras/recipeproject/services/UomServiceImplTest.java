@@ -34,10 +34,10 @@ class UomServiceImplTest {
     void findAll() {
         // given
         UnitOfMeasure uomCommand1 = new UnitOfMeasure();
-        uomCommand1.setId(1L);
+        uomCommand1.setId("1");
 
         UnitOfMeasure uomCommand2 = new UnitOfMeasure();
-        uomCommand2.setId(2L);
+        uomCommand2.setId("2");
 
         Set<UnitOfMeasure> unitOfMeasures = new HashSet<>();
         unitOfMeasures.add(uomCommand1);

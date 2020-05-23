@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,30 +41,24 @@ class RecipeControllerTest {
     @Test
     void showRecipe() throws Exception {
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
-        when(recipeService.findById(anyLong())).thenReturn(recipe);
+        recipe.setId("1");
+        when(recipeService.findById(anyString())).thenReturn(recipe);
 
         mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(view().name("recipe/show"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("recipe"));
 
-        verify(recipeService, times(1)).findById(1L);
+        verify(recipeService, times(1)).findById("1");
     }
 
     @Test
     void handleNotFoundException() throws Exception {
-        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
         mockMvc.perform(get("/recipe/4/show"))
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    void handleNumberFormatException() throws Exception {
-        mockMvc.perform(get("/recipe/DUMMY/show"))
-                .andExpect(status().isBadRequest())
-                .andExpect(view().name("400error"));
-    }
 
     @Test
     void showRecipeForm() throws Exception {
@@ -78,13 +71,13 @@ class RecipeControllerTest {
     @Test
     void createRecipe() throws Exception {
         RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(3L);
+        recipeCommand.setId("3");
 
         when(recipeService.save(any())).thenReturn(recipeCommand);
 
         RecipeCommand savedRecipeCommand = recipeService.save(recipeCommand);
 
-        assertEquals(3L, savedRecipeCommand.getId());
+        assertEquals("3", savedRecipeCommand.getId());
 
         mockMvc.perform(post("/recipe")
                 .param("id", "")
@@ -108,9 +101,9 @@ class RecipeControllerTest {
     @Test
     void updateRecipe() throws Exception {
         RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(1L);
+        recipeCommand.setId("1");
 
-        when(recipeService.findCommandById(anyLong())).thenReturn(recipeCommand);
+        when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
 
         mockMvc.perform(get("/recipe/1/update"))
                 .andExpect(status().isOk())
@@ -124,12 +117,12 @@ class RecipeControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
 
-        verify(recipeService, times(1)).deleteById(anyLong());
+        verify(recipeService, times(1)).deleteById(anyString());
     }
 
     @Test
     void handleNotFoundRecipe() throws Exception {
-        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/recipe/4/show"))
                 .andExpect(status().isNotFound())

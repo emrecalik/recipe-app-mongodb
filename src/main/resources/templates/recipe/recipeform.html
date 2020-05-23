@@ -125,11 +125,26 @@
                                 <div class="panel-heading">
                                     <div class="row">
                                         <div class="panel-title col-md-11">Ingredients</div>
-                                        <a class="btn btn-default col-md-1" href="#" role="button">Edit</a>
+                                        <a th:href="@{'/recipe/' + ${recipe.getId()} + '/ingredients'}" class="btn btn-default col-md-1" th:text="View">View</a>
                                     </div>
                                 </div>
                                 <div class="panel-body">
-
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul th:each="item : ${recipe.getIngredientCommands()}">
+                                                <li><td th:text="${item.getAmount() + ' ' + item.getUnitOfMeasureCommand().unitOfMeasure + ' - ' + item.getDescription()}"></td></li>
+                                            </ul>
+                                            <div th:each="ingredientEach, idx : ${recipe.ingredientCommands}" >
+                                                <input  type="hidden" th:field="*{ingredientCommands[__${idx.index}__].id}" />
+                                                <input  type="hidden" th:field="*{ingredientCommands[__${idx.index}__].description}" />
+                                                <input  type="hidden" th:field="*{ingredientCommands[__${idx.index}__].amount}" />
+                                                <input  type="hidden" th:field="*{ingredientCommands[__${idx.index}__].unitOfMeasureCommand.id}" />
+                                            </div>
+                                            <div th:each="categoryEach, idx : ${recipe.categoryCommands}" >
+                                                <input  type="hidden" th:field="*{categoryCommands[__${idx.index}__].id}" />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

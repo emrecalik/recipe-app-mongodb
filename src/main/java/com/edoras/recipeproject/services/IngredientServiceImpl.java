@@ -32,7 +32,6 @@ public class IngredientServiceImpl implements IngredientService {
         this.ingredientCommandConverter = ingredientCommandConverter;
     }
 
-    @Transactional
     @Override
     public IngredientCommand findCommandByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
@@ -50,7 +49,7 @@ public class IngredientServiceImpl implements IngredientService {
         if (!ingredientCommandOptional.isPresent()) {
             log.error("ingredient id not found: " + ingredientId);
         }
-
+        ingredientCommandOptional.get().setRecipeId(recipeId);
         return ingredientCommandOptional.get();
     }
 

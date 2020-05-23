@@ -1,5 +1,6 @@
 package com.edoras.recipeproject.converters;
 
+import com.edoras.recipeproject.commands.IngredientCommand;
 import com.edoras.recipeproject.commands.RecipeCommand;
 import com.edoras.recipeproject.domains.Recipe;
 import org.springframework.core.convert.converter.Converter;
@@ -38,7 +39,9 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
 
         if (recipe.getIngredients() != null && recipe.getIngredients().size() > 0) {
             recipe.getIngredients().forEach(ingredient -> {
-                recipeCommand.getIngredientCommands().add(ingredientConverter.convert(ingredient));
+                IngredientCommand ingredientCommand = ingredientConverter.convert(ingredient);
+                ingredientCommand.setRecipeId(recipe.getId());
+                recipeCommand.getIngredientCommands().add(ingredientCommand);
             });
         }
 

@@ -1,5 +1,6 @@
 package com.edoras.recipeproject.repositories;
 
+import com.edoras.recipeproject.bootstrap.BootstrapMongoDB;
 import com.edoras.recipeproject.domains.UnitOfMeasure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,16 +15,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class UnitOfMeasureRepositoryIT {
 
     @Autowired
+    RecipeRepository recipeRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
     UnitOfMeasureRepository unitOfMeasureRepository;
 
     @BeforeEach
     void setUp() {
+        recipeRepository.deleteAll();
+        unitOfMeasureRepository.deleteAll();
+        categoryRepository.deleteAll();
+
+        BootstrapMongoDB bootstrapMongoDB = new BootstrapMongoDB(categoryRepository, unitOfMeasureRepository, recipeRepository);
+
+        bootstrapMongoDB.onApplicationEvent(null);
     }
 
     @Test
     void findByUom() {
-        Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureRepository.findByDescription("Teaspoon");
-        assertEquals(unitOfMeasure.get().getDescription(), "Teaspoon");
+        Optional<UnitOfMeasure> savedUnitOfMeasure = unitOfMeasureRepository.findByDescription("Tablespoon");
+        assertEquals(savedUnitOfMeasure.get().getDescription(), "Tablespoon");
     }
 
     @Test

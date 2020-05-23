@@ -13,9 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.HashSet;
-import java.util.Set;
+import reactor.core.publisher.Flux;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -81,8 +79,12 @@ class IngredientControllerTest {
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setId(INGREDIENT_ID);
 
+        UnitOfMeasureCommand unitOfMeasureCommand = new UnitOfMeasureCommand();
+        unitOfMeasureCommand.setUnitOfMeasure("HANDFULL");
+
         // when
         when(ingredientService.findCommandByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
+        when(uomService.findAll()).thenReturn(Flux.just(unitOfMeasureCommand));
 
         // then
         mockMvc.perform(get("/recipe/" + RECIPE_ID + "/ingredients/" + INGREDIENT_ID + "/update"))
@@ -115,10 +117,7 @@ class IngredientControllerTest {
         UnitOfMeasureCommand uomCommand = new UnitOfMeasureCommand();
         uomCommand.setId("10");
 
-        Set<UnitOfMeasureCommand> uomCommandSet = new HashSet<>();
-        uomCommandSet.add(uomCommand);
-
-        when(uomService.findAll()).thenReturn(uomCommandSet);
+        when(uomService.findAll()).thenReturn(Flux.just(uomCommand));
 
         // then
         mockMvc.perform(get("/recipe/" + RECIPE_ID + "/ingredient/new"))

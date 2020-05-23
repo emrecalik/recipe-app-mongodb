@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Set;
+import java.util.List;
 
 @Controller
 public class IngredientController {
@@ -51,7 +51,7 @@ public class IngredientController {
     public String showIngredientForm(@PathVariable String recipeId,
                                      @PathVariable String ingredientId, Model model) {
         IngredientCommand ingredientCommand = ingredientService.findCommandByRecipeIdAndIngredientId(recipeId, ingredientId);
-        Set<UnitOfMeasureCommand> uomSet = uomService.findAll();
+        List<UnitOfMeasureCommand> uomSet = uomService.findAll().collectList().block();
         model.addAttribute("ingredient", ingredientCommand);
         model.addAttribute("uomList", uomSet);
         return "recipe/ingredient/form";
@@ -70,7 +70,7 @@ public class IngredientController {
         ingredientCommand.setRecipeId(recipeId);
         model.addAttribute("ingredient", ingredientCommand);
 
-        Set<UnitOfMeasureCommand> uomSet = uomService.findAll();
+        List<UnitOfMeasureCommand> uomSet = uomService.findAll().collectList().block();
         model.addAttribute("uomList", uomSet);
 
         return "recipe/ingredient/form";

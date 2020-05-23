@@ -2,28 +2,26 @@ package com.edoras.recipeproject.services;
 
 import com.edoras.recipeproject.commands.UnitOfMeasureCommand;
 import com.edoras.recipeproject.converters.UomToUomCommand;
-import com.edoras.recipeproject.repositories.UnitOfMeasureRepository;
+import com.edoras.recipeproject.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.Set;
+import reactor.core.publisher.Flux;
 
 @Service
 public class UomServiceImpl implements UomService {
 
-    UnitOfMeasureRepository unitOfMeasureRepository;
+    UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
     UomToUomCommand uomConverter;
 
-    public UomServiceImpl(UnitOfMeasureRepository unitOfMeasureRepository,
+    public UomServiceImpl(UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository,
                           UomToUomCommand uomConverter) {
-        this.unitOfMeasureRepository = unitOfMeasureRepository;
+        this.unitOfMeasureReactiveRepository = unitOfMeasureReactiveRepository;
         this.uomConverter = uomConverter;
     }
 
     @Override
-    public Set<UnitOfMeasureCommand> findAll() {
-        Set<UnitOfMeasureCommand> uomSet = new HashSet<>();
-        unitOfMeasureRepository.findAll().forEach(unitOfMeasure -> uomSet.add(uomConverter.convert(unitOfMeasure)));
+    public Flux<UnitOfMeasureCommand> findAll() {
+        Flux<UnitOfMeasureCommand> uomSet = unitOfMeasureReactiveRepository.findAll()
+                .map(item -> uomConverter.convert(item));
         return uomSet;
     }
 }

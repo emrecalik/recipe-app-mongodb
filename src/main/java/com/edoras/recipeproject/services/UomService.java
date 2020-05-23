@@ -1,9 +1,8 @@
 package com.edoras.recipeproject.services;
 
 import com.edoras.recipeproject.commands.UnitOfMeasureCommand;
-
-import java.util.Set;
+import reactor.core.publisher.Flux;
 
 public interface UomService {
-    Set<UnitOfMeasureCommand> findAll();
+    Flux<UnitOfMeasureCommand> findAll();
 }

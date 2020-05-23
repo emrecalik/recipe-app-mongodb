@@ -9,6 +9,7 @@ import com.edoras.recipeproject.repositories.RecipeRepository;
 import com.edoras.recipeproject.repositories.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientCommand findCommandByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
+    public Mono<IngredientCommand> findCommandByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
 
         if (!recipeOptional.isPresent()) {
@@ -50,12 +51,12 @@ public class IngredientServiceImpl implements IngredientService {
             log.error("ingredient id not found: " + ingredientId);
         }
         ingredientCommandOptional.get().setRecipeId(recipeId);
-        return ingredientCommandOptional.get();
+        return Mono.just(ingredientCommandOptional.get());
     }
 
     @Transactional
     @Override
-    public IngredientCommand save(IngredientCommand command) {
+    public Mono<IngredientCommand> save(IngredientCommand command) {
 
         Optional<Recipe> recipeOptional = recipeRepository.findById(command.getRecipeId());
 
@@ -63,7 +64,7 @@ public class IngredientServiceImpl implements IngredientService {
 
             //todo toss error if not found!
             log.error("Recipe not found for id: " + command.getRecipeId());
-            return new IngredientCommand();
+            return Mono.just(new IngredientCommand());
         } else {
             Recipe recipe = recipeOptional.get();
 
@@ -101,13 +102,13 @@ public class IngredientServiceImpl implements IngredientService {
             }
 
             //to do check for fail
-            return ingredientConverter.convert(savedIngredient.get());
+            return Mono.just(ingredientConverter.convert(savedIngredient.get()));
         }
     }
 
     @Transactional
     @Override
-    public void deleteById(String recipeId, String ingredientId) {
+    public Mono<Void> deleteById(String recipeId, String ingredientId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
 
         if (!recipeOptional.isPresent()) {
@@ -129,5 +130,7 @@ public class IngredientServiceImpl implements IngredientService {
         recipe.getIngredients().remove(ingredientToDelete);
 
         recipeRepository.save(recipe);
+
+        return Mono.empty();
     }
 }

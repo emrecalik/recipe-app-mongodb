@@ -71,7 +71,7 @@ class IngredientServiceImplTest {
         when(recipeRepository.findById(anyString())).thenReturn(java.util.Optional.of(recipe));
 
         // when
-        IngredientCommand ingredientCommand = ingredientService.findCommandByRecipeIdAndIngredientId("1", "2");
+        IngredientCommand ingredientCommand = ingredientService.findCommandByRecipeIdAndIngredientId("1", "2").block();
 
         // then
         assertEquals("2", ingredientCommand.getId());

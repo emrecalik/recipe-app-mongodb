@@ -1,19 +1,15 @@
 package com.edoras.recipeproject.controllers;
 
 import com.edoras.recipeproject.commands.RecipeCommand;
-import com.edoras.recipeproject.domains.Recipe;
-import com.edoras.recipeproject.exceptions.NotFoundException;
 import com.edoras.recipeproject.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.validation.Valid;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Controller
@@ -28,10 +24,16 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
+    WebDataBinder webDataBinder;
+
+    @InitBinder
+    public void initBinder(WebDataBinder webDataBinder) {
+        this.webDataBinder = webDataBinder;
+    }
+
     @GetMapping("/recipe/{id}/show")
     public String showRecipe(@PathVariable String id, Model model) {
-        Recipe recipe = recipeService.findById(id).block();
-        model.addAttribute("recipe", recipe);
+        model.addAttribute("recipe", recipeService.findById(id));
         return "recipe/show";
     }
 
@@ -42,19 +44,23 @@ public class RecipeController {
     }
 
     @PostMapping("/recipe")
-    public String createRecipe(@Valid @ModelAttribute("recipe") RecipeCommand recipeCommand, BindingResult bindingResult) {
+    public Mono<String> createRecipe(@ModelAttribute("recipe") RecipeCommand recipeCommand) {
+        webDataBinder.validate();
+        BindingResult bindingResult = webDataBinder.getBindingResult();
+
         if (bindingResult.hasErrors()) {
-            return RECIPE_FORM_VIEW;
+            return Mono.just(RECIPE_FORM_VIEW);
         }
-        RecipeCommand savedRecipe = recipeService.save(recipeCommand).block();
-        String id = savedRecipe.getId();
-        return "redirect:/recipe/" + id + "/show";
+
+        Mono<String> redirect = recipeService.save(recipeCommand)
+                .map(savedRecipe -> "redirect:/recipe/" + savedRecipe.getId() + "/show");
+
+        return redirect;
     }
 
     @GetMapping("/recipe/{id}/update")
     public String updateRecipe(@PathVariable String id, Model model) {
-        RecipeCommand recipeCommand = recipeService.findCommandById(id).block();
-        model.addAttribute("recipe", recipeCommand);
+        model.addAttribute("recipe", recipeService.findCommandById(id));
         return RECIPE_FORM_VIEW;
     }
 
@@ -64,12 +70,12 @@ public class RecipeController {
         return "redirect:/";
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
-    public ModelAndView handleNotFoundException(Exception exception) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("404error");
-        modelAndView.addObject("exception", exception);
-        return modelAndView;
-    }
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    @ExceptionHandler(NotFoundException.class)
+//    public ModelAndView handleNotFoundException(Exception exception) {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("404error");
+//        modelAndView.addObject("exception", exception);
+//        return modelAndView;
+//    }
 }

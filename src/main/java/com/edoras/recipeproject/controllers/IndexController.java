@@ -5,8 +5,7 @@ import com.edoras.recipeproject.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 @Controller
 public class IndexController {
@@ -19,7 +18,7 @@ public class IndexController {
 
     @RequestMapping({"", "/", "/index"})
     public String showHome(Model model) {
-        List<Recipe> recipes = recipeService.getRecipes().collectList().block();
+        Flux<Recipe> recipes = recipeService.getRecipes();
         model.addAttribute("recipes", recipes);
         return "index";
     }

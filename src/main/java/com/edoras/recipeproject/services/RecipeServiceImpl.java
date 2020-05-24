@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.transaction.Transactional;
-
 @Slf4j
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -42,18 +40,22 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Mono<RecipeCommand> findCommandById(String id) {
-        Mono<Recipe> recipe = recipeReactiveRepository.findById(id);
-        RecipeCommand recipeCommand = recipeConverter.convert(recipe.block());
-        return Mono.just(recipeCommand);
+        return recipeReactiveRepository.findById(id).map(recipe -> {
+            RecipeCommand recipeCommand = recipeConverter.convert(recipe);
+            return recipeCommand;
+        });
     }
 
-    @Transactional
     @Override
     public Mono<RecipeCommand> save(RecipeCommand recipeCommand) {
-        Recipe recipe = recipeCommandConverter.convert(recipeCommand);
-        Recipe savedRecipe = recipeReactiveRepository.save(recipe).block();
-        RecipeCommand savedRecipeCommand = recipeConverter.convert(savedRecipe);
-        return Mono.just(savedRecipeCommand);
+//        Recipe recipe = recipeCommandConverter.convert(recipeCommand);
+//        Recipe savedRecipe = recipeReactiveRepository.save(recipe).block();
+//        RecipeCommand savedRecipeCommand = recipeConverter.convert(savedRecipe);
+
+        return recipeReactiveRepository.save(recipeCommandConverter.convert(recipeCommand))
+                .map(savedRecipe -> recipeConverter.convert(savedRecipe));
+
+//        return Mono.just(savedRecipeCommand);
     }
 
     @Override

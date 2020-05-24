@@ -1,6 +1,5 @@
 package com.edoras.recipeproject.controllers;
 
-import com.edoras.recipeproject.commands.RecipeCommand;
 import com.edoras.recipeproject.domains.Recipe;
 import com.edoras.recipeproject.services.ImageService;
 import com.edoras.recipeproject.services.RecipeService;
@@ -12,9 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Slf4j
 @Controller
@@ -37,27 +33,27 @@ public class ImageController {
 
     @PostMapping("/recipe/{recipeId}/image")
     public String saveImage(@PathVariable String recipeId, @RequestParam("imagefile") MultipartFile multipartFile) {
-        imageService.saveImage(recipeId, multipartFile);
+        imageService.saveImage(recipeId, multipartFile).block();
         return "redirect:/recipe/" + recipeId + "/show";
     }
 
-    @GetMapping("/recipe/{recipeId}/recipeImage")
-    public void renderImage(@PathVariable String recipeId, HttpServletResponse response) throws IOException {
-        RecipeCommand recipeCommand = recipeService.findCommandById(recipeId).block();
-
-        if (recipeCommand.getImage() != null) {
-            Byte[] imageByteObjects = recipeCommand.getImage();
-            byte[] imageBytes = new byte[imageByteObjects.length];
-
-            int i = 0;
-            while (i < imageBytes.length) {
-                imageBytes[i] = imageByteObjects[i];
-                i++;
-            }
-
-            response.setContentType("image/jpg");
-            response.getOutputStream().write(imageBytes);
-            response.getOutputStream().close();
-        }
-    }
+//    @GetMapping("/recipe/{recipeId}/recipeImage")
+//    public void renderImage(@PathVariable String recipeId, HttpServletResponse response) throws IOException {
+//        RecipeCommand recipeCommand = recipeService.findCommandById(recipeId).block();
+//
+//        if (recipeCommand.getImage() != null) {
+//            Byte[] imageByteObjects = recipeCommand.getImage();
+//            byte[] imageBytes = new byte[imageByteObjects.length];
+//
+//            int i = 0;
+//            while (i < imageBytes.length) {
+//                imageBytes[i] = imageByteObjects[i];
+//                i++;
+//            }
+//
+//            response.setContentType("image/jpg");
+//            response.getOutputStream().write(imageBytes);
+//            response.getOutputStream().close();
+//        }
+//    }
 }

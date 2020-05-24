@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface UnitOfMeasureReactiveRepository extends ReactiveMongoRepository<UnitOfMeasure, String> {
 
-    Mono<UnitOfMeasure> findByDescription(String toomany);
+    Mono<UnitOfMeasure> findByDescription(String uom);
 }

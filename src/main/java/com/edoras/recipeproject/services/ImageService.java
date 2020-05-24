@@ -1,7 +1,8 @@
 package com.edoras.recipeproject.services;
 
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 public interface ImageService {
-    void saveImage(String recipeId, MultipartFile file);
+    Mono<Void> saveImage(String recipeId, MultipartFile file);
 }

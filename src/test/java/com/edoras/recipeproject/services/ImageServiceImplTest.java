@@ -1,12 +1,13 @@
 package com.edoras.recipeproject.services;
 
 import com.edoras.recipeproject.domains.Recipe;
-import com.edoras.recipeproject.repositories.RecipeRepository;
+import com.edoras.recipeproject.repositories.reactive.RecipeReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.*;
 class ImageServiceImplTest {
 
     @Mock
-    RecipeRepository recipeRepository;
+    RecipeReactiveRepository recipeReactiveRepository;
 
     ImageServiceImpl imageService;
 
@@ -25,7 +26,7 @@ class ImageServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        imageService = new ImageServiceImpl(recipeRepository);
+        imageService = new ImageServiceImpl(recipeReactiveRepository);
     }
 
     @Test
@@ -37,13 +38,14 @@ class ImageServiceImplTest {
         Recipe recipe = new Recipe();
         recipe.setId(RECIPE_ID);
 
-        when(recipeRepository.findById(anyString())).thenReturn(java.util.Optional.of(recipe));
+        when(recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(recipe));
+        when(recipeReactiveRepository.save(recipe)).thenReturn(Mono.just(recipe));
 
         // when
         imageService.saveImage(RECIPE_ID, multipartFile);
 
         // then
-        verify(recipeRepository, times(1)).save(any());
+        verify(recipeReactiveRepository, times(1)).save(any());
         assertEquals(multipartFile.getBytes().length, recipe.getImage().length);
     }
 }

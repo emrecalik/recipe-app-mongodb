@@ -1,24 +1,25 @@
 package com.edoras.recipeproject.services;
 
 import com.edoras.recipeproject.domains.Recipe;
-import com.edoras.recipeproject.repositories.RecipeRepository;
+import com.edoras.recipeproject.repositories.reactive.RecipeReactiveRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
 @Service
 public class ImageServiceImpl implements ImageService {
 
-    RecipeRepository recipeRepository;
+    RecipeReactiveRepository recipeReactiveRepository;
 
-    public ImageServiceImpl(RecipeRepository recipeRepository) {
-        this.recipeRepository = recipeRepository;
+    public ImageServiceImpl(RecipeReactiveRepository recipeReactiveRepository) {
+        this.recipeReactiveRepository = recipeReactiveRepository;
     }
 
     @Override
-    public void saveImage(String recipeId, MultipartFile file) {
-        Recipe recipe = recipeRepository.findById(recipeId).get();
+    public Mono<Void> saveImage(String recipeId, MultipartFile file) {
+        Recipe recipe = recipeReactiveRepository.findById(recipeId).block();
 
         try {
             byte[] imageBytes = file.getBytes();
@@ -31,9 +32,10 @@ public class ImageServiceImpl implements ImageService {
             }
 
             recipe.setImage(imageByteObjects);
-            recipeRepository.save(recipe);
+            recipeReactiveRepository.save(recipe).block();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return Mono.empty();
     }
 }

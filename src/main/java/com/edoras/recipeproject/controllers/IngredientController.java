@@ -1,6 +1,7 @@
 package com.edoras.recipeproject.controllers;
 
 import com.edoras.recipeproject.commands.IngredientCommand;
+import com.edoras.recipeproject.commands.UnitOfMeasureCommand;
 import com.edoras.recipeproject.services.IngredientService;
 import com.edoras.recipeproject.services.RecipeService;
 import com.edoras.recipeproject.services.UomService;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Controller
@@ -56,7 +58,6 @@ public class IngredientController {
                                      @PathVariable String ingredientId, Model model) {
         model.addAttribute("ingredient"
                 , ingredientService.findCommandByRecipeIdAndIngredientId(recipeId, ingredientId));
-        model.addAttribute("uomList", uomService.findAll());
         return RECIPE_INGREDIENT_FORM;
     }
 
@@ -65,7 +66,6 @@ public class IngredientController {
                                                @PathVariable String recipeId, Model model) {
         webDataBinder.validate();
         BindingResult bindingResult = webDataBinder.getBindingResult();
-        model.addAttribute("uomList", uomService.findAll());
         if (bindingResult.hasErrors()) {
             return Mono.just(RECIPE_INGREDIENT_FORM);
         }
@@ -80,7 +80,6 @@ public class IngredientController {
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setRecipeId(recipeId);
         model.addAttribute("ingredient", ingredientCommand);
-        model.addAttribute("uomList", uomService.findAll());
 
         return "recipe/ingredient/form";
     }
@@ -90,6 +89,11 @@ public class IngredientController {
                                    @PathVariable String ingredientId) {
         ingredientService.deleteById(recipeId, ingredientId).block();
         return "redirect:/recipe/" + recipeId + "/ingredients";
+    }
+
+    @ModelAttribute("uomList")
+    public Flux<UnitOfMeasureCommand> loadUomList() {
+        return uomService.findAll();
     }
 
 }

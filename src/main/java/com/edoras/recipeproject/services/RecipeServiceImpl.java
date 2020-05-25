@@ -48,14 +48,8 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Mono<RecipeCommand> save(RecipeCommand recipeCommand) {
-//        Recipe recipe = recipeCommandConverter.convert(recipeCommand);
-//        Recipe savedRecipe = recipeReactiveRepository.save(recipe).block();
-//        RecipeCommand savedRecipeCommand = recipeConverter.convert(savedRecipe);
-
         return recipeReactiveRepository.save(recipeCommandConverter.convert(recipeCommand))
                 .map(savedRecipe -> recipeConverter.convert(savedRecipe));
-
-//        return Mono.just(savedRecipeCommand);
     }
 
     @Override

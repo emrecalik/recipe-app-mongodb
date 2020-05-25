@@ -37,7 +37,7 @@
                                     <h5>Categories:</h5>
                                 </div>
                                 <div class="col-md-3">
-                                    <tr th:each="item : ${recipe.getCategories()}">
+                                    <tr th:each="item : ${recipe.categories}">
                                         <li><td th:text="${item.getDescription()}"></td></li>
                                     </tr>
                                 </div>

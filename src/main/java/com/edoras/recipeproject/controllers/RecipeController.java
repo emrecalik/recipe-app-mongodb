@@ -1,9 +1,11 @@
 package com.edoras.recipeproject.controllers;
 
 import com.edoras.recipeproject.commands.RecipeCommand;
+import com.edoras.recipeproject.exceptions.NotFoundException;
 import com.edoras.recipeproject.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,6 +51,9 @@ public class RecipeController {
         BindingResult bindingResult = webDataBinder.getBindingResult();
 
         if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(objectError -> {
+                log.debug(objectError.toString());
+            });
             return Mono.just(RECIPE_FORM_VIEW);
         }
 
@@ -59,9 +64,9 @@ public class RecipeController {
     }
 
     @GetMapping("/recipe/{id}/update")
-    public String updateRecipe(@PathVariable String id, Model model) {
+    public Mono<String> updateRecipe(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.findCommandById(id));
-        return RECIPE_FORM_VIEW;
+        return Mono.just(RECIPE_FORM_VIEW);
     }
 
     @GetMapping("/recipe/{id}/delete")
@@ -70,12 +75,10 @@ public class RecipeController {
         return "redirect:/";
     }
 
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    @ExceptionHandler(NotFoundException.class)
-//    public ModelAndView handleNotFoundException(Exception exception) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("404error");
-//        modelAndView.addObject("exception", exception);
-//        return modelAndView;
-//    }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public String handleNotFoundException(Exception exception, Model model) {
+        model.addAttribute(exception);
+        return "404error";
+    }
 }

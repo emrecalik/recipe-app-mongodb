@@ -6,16 +6,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.thymeleaf.exceptions.TemplateProcessingException;
+import org.springframework.web.bind.support.WebExchangeBindException;
 
 @ControllerAdvice
 public class GlobalControllerExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({NumberFormatException.class, TemplateProcessingException.class})
+    @ExceptionHandler(WebExchangeBindException.class)
     public String handleNumberFormatException(Exception exception, Model model) {
         model.addAttribute("exception", exception);
-        return "404error";
+        return "400error";
     }
 
 }
